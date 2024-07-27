@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import ArrowLeftSVG from "../assets/arrow-left.svg";
 
 const props = defineProps({
@@ -10,27 +10,37 @@ const props = defineProps({
 });
 
 const currentStep = ref(0);
+const componentRef = ref(null);
 
-const nextStep = () => {
-  if (currentStep.value < props.steps.length - 1) {
-    currentStep.value++;
-    window.scrollTo(0, 0); // Scroll to the top
+// Function to move to the next step
+const nextStep = async () => {
+  if (componentRef.value) {
+    const isValid = await componentRef.value.validateAndSubmit();
+    if (isValid) {
+      currentStep.value++;
+      window.scrollTo(0, 0);
+    }
   }
 };
 
+// Function to go to the previous step
 const prevStep = () => {
   if (currentStep.value > 0) {
     currentStep.value--;
     window.scrollTo(0, 0); // Scroll to the top
   }
 };
+
+// Computed property to determine if the proceed button should be disabled
+const isProceedDisabled = computed(() => {
+  return !componentRef.value || !componentRef.value.isValid;
+});
 </script>
 
 <template>
   <div class="m-auto">
-    <div>
-      <component :is="steps[currentStep].component" />
-    </div>
+    <!-- Dynamic component loading based on the current step -->
+    <component :is="steps[currentStep]?.component" ref="componentRef" />
 
     <hr class="my-8" />
 
@@ -38,12 +48,8 @@ const prevStep = () => {
       <button @click="prevStep" :disabled="currentStep === 0" class="btn-prev flex items-center">
         <ArrowLeftSVG alt="Previous" /> &nbsp; Previous
       </button>
-      <button
-        @click="nextStep"
-        :disabled="currentStep === steps.length - 1"
-        class="btn-next"
-      >
-        Proceed
+      <button @click="nextStep" :disabled="isProceedDisabled" class="btn-next">
+        {{ currentStep == 2 ? "Submit" : "Proceed" }}
       </button>
     </div>
   </div>

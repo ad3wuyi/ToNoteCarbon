@@ -19,15 +19,9 @@ export const useUserFormStore = defineStore('userFormStore', {
 		setIdentity(file) {
 			this.identity = file;
 		},
-		// setFormData(data) {
-		// 	this.company = data.company !== undefined ? data.company : this.company;
-		// 	this.email = data.email !== undefined ? data.email : this.email;
-		// 	this.phone = data.phone !== undefined ? data.phone : this.phone;
-		// 	this.identity = data.identity !== undefined ? data.identity : this.identity;
-		// },
-		// reset() {
-		//   this.$reset();
-		// },
+		reset() {
+			this.$reset();
+		},
 		async submitForm() {
 			const formData = new FormData();
 			if (this.identity) formData.append('identity', this.identity);
@@ -43,13 +37,11 @@ export const useUserFormStore = defineStore('userFormStore', {
 					},
 				});
 				toast.success(response.data.message);
-				console.log(response.data);
 
 				// Save user ID from response
 				this.userId = response.data.user.id;
 				// this.reset();
 			} catch (error) {
-				console.log(error.response.data);
 				toast.error(error.response.data.message);
 				console.error('Error uploading files:', error);
 			}

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useToast } from 'vue-toastification';
 import { useUserFormStore } from './userFormStore';
+import router from '../router';
 
 const toast = useToast();
 
@@ -62,16 +63,9 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 				toast.error('Failed to fetch states');
 			}
 		},
-		// setPersonalInfo(data) {
-		// 	this.full_name = data.full_name || this.full_name;
-		// 	this.gender = data.gender || this.gender;
-		// 	this.occupation = data.occupation || this.occupation;
-		// 	this.religion = data.religion || this.religion;
-		// 	this.nationality = data.nationality || this.nationality;
-		// 	this.address = data.address || this.address;
-		// 	this.state = data.state || this.state;
-		// 	this.swear_date = data.swear_date || this.swear_date;
-		// },
+		setAgreement(agreement) {
+			this.agree = agreement;
+		},
 		setPhotograph(file) {
 			this.photo = file;
 		},
@@ -93,7 +87,8 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 
 			// Add personal information to formData
 			formData.append('user_id', userStore.userId);
-			formData.append('agree', this.agree ? true : false);
+			formData.append('company', userStore.company);
+			formData.append('agree', this.agree ? 1 : 0);
 			formData.append('full_name', this.full_name);
 			formData.append('gender', this.gender);
 			formData.append('occupation', this.occupation);
@@ -116,7 +111,11 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 				});
 
 				toast.success(response.data.message);
-				console.log('Submit response:', response.data);
+				router.push({ name: 'completed' });
+
+				// Reset the form stores upon successful submission
+				this.reset();
+				userStore.reset();
 			} catch (error) {
 				console.error('Error submitting data:', error);
 				toast.error(error.response.data.message);

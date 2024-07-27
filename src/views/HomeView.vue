@@ -3,12 +3,14 @@ import { ref } from "vue";
 import WizardComp from "../components/WizardComp.vue";
 import CardComp from "../components/CardComp.vue";
 
-import Step1 from "@/components/Step1.vue";
-import Step2 from "@/components/Step2.vue";
+import UserForm from "@/components/UserForm.vue";
+import AffidavitForm from "@/components/AffidavitForm.vue";
+import TermAndAgreement from "@/components/TermAndAgreement.vue";
 
 const steps = [
-  { title: "Step 1", component: Step1 },
-  { title: "Step 2", component: Step2 },
+  { title: "Step 1", component: UserForm },
+  { title: "Step 2", component: AffidavitForm },
+  { title: "Step 3", component: TermAndAgreement },
 ];
 </script>
 
