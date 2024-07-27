@@ -5,7 +5,7 @@
     <slot name="image">
       <!-- <img class="w-full" src="https://via.placeholder.com/150" alt="Default Image" /> -->
     </slot>
-    <div class="px-6 py-4">
+    <div class="px-3 md:px-6 py-4">
       <slot name="title">
         <!-- <div class="font-bold text-xl mb-2">Default Title</div> -->
       </slot>

@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useAffidavitFormStore } from "@/stores/affidavitFormStore";
 import ModalComp from "./ModalComp.vue";
-// import SignPad from "./SignPad.vue";
+import SignPad from "./SignPad.vue";
 import DropZone from "./DropZone.vue";
 import CardComp from "./CardComp.vue";
 import VerticalTabs from "./VerticalTabs.vue";
@@ -15,7 +15,7 @@ import * as yup from "yup";
 
 const store = useAffidavitFormStore();
 
-const tabs = ["Upload"];
+const tabs = ["Draw", "Upload"];
 const selectedIndex = ref(0);
 
 const photographPreview = ref(null);
@@ -40,10 +40,10 @@ const handleUploadedSignature = (files) => {
   }
 };
 
-// const handleDrawnSignature = async (drawnImg) => {
-//   store.setSignature(drawnImg);
-//   signaturePreview.value = drawnImg;
-// };
+const handleDrawnSignature = async (drawnImg) => {
+  store.setSignature(drawnImg);
+  signaturePreview.value = drawnImg;
+};
 
 const showSignatureModal = ref(false);
 
@@ -54,14 +54,24 @@ const updateVisible = (visible) => {
 const photoSchema = yup
   .mixed()
   .test("fileType", "Unsupported File Format", (value) => {
-    return value && (value.type === "image/jpeg" || value.type === "image/jpg" || value.type === "image/png");
+    return (
+      value &&
+      (value.type === "image/jpeg" ||
+        value.type === "image/jpg" ||
+        value.type === "image/png")
+    );
   })
   .required("Photograph is required");
 
 const signatureSchema = yup
   .mixed()
   .test("fileType", "Unsupported File Format", (value) => {
-    return value && (value.type === "image/jpeg" || value.type === "image/jpg" || value.type === "image/png");
+    return (
+      value &&
+      (value.type === "image/jpeg" ||
+        value.type === "image/jpg" ||
+        value.type === "image/png")
+    );
   })
   .required("Signature is required");
 
@@ -77,7 +87,6 @@ const schema = yup.object({
   photo: photoSchema,
   signature: signatureSchema,
 });
-
 
 const { handleSubmit, validate, meta, setFieldValue } = useForm({
   validationSchema: schema,
@@ -121,7 +130,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="a4-size">
+  <div class="a4-size p-0 lg:p-4">
     <div class="flex flex-col md:flex-row items-center gap-10">
       <div class="w-[150px] h-[160px] bg-gray-100 rounded-lg border border-dashed border-gray-400 relative">
         <UserSVG v-if="!photographPreview" alt="user" />
@@ -136,13 +145,13 @@ onMounted(async () => {
       </div>
 
       <div class="text-center text-lg leading-[2rem] font-bold">
-        <div class="form-field">
+        <div class="form-field text-sm md:text-lg leading-6">
           <h2>IN THE CHAMBERS OF THE NOTARY PUBLIC OF NIGERIA</h2>
         </div>
-        <div class="form-field">
+        <div class="form-field text-sm md:text-lg leading-6">
           <h2>IN THE …………………… JUDICIAL DIVISION</h2>
         </div>
-        <div class="form-field">
+        <div class="form-field text-sm md:text-lg leading-6">
           <h2>HOLDEN AT ……………………</h2>
         </div>
       </div>
@@ -154,17 +163,18 @@ onMounted(async () => {
     <div class="form-field">
       <p class="mb-4">
         I,
-        <span class="relative inline-block mb-6">
+        <span class="relative block md:inline-block mb-0 md:mb-6">
           <Field
-            class="appearance-none w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
+            class="appearance-none w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
             type="text" name="name" id="name" v-model="store.full_name" placeholder="Your Name" />
           <ErrorMessage name="name" class="absolute bottom-0 block text-red-500 text-sm" />
         </span>
 
-        &nbsp; Adult &nbsp;
-        <span class="relative inline-block mb-6">
+        <span class="hidden md:inline">&nbsp;</span> Adult
+        <span class="hidden md:inline">&nbsp;</span>
+        <span class="relative block md:inline-block mb-0 md:mb-6">
           <Field as="select"
-            class="w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
+            class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
             v-model="store.gender" name="gender" id="gender">
             <option value="" selected>Choose Gender</option>
             <option v-for="gender in store.genders" :key="gender.code" :value="gender.code">
@@ -173,17 +183,17 @@ onMounted(async () => {
           </Field>
           <ErrorMessage name="gender" class="absolute bottom-0 block text-red-500 text-sm" />
         </span>
-        &nbsp;
-        <span class="relative inline-block mb-6">
+        <span class="hidden md:inline">&nbsp;</span>
+        <span class="relative block md:inline-block mb-0 md:mb-6">
           <Field type="text"
-            class="appearance-none w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
+            class="appearance-none w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
             v-model="store.occupation" name="occupation" id="occupation" required placeholder="Occupation" />
           <ErrorMessage name="occupation" class="absolute bottom-0 block text-red-500 text-sm" />
         </span>
-        &nbsp;
-        <span class="relative inline-block mb-6">
+        <span class="hidden md:inline">&nbsp;</span>
+        <span class="relative block md:inline-block mb-0 md:mb-6">
           <Field as="select"
-            class="w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
+            class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
             v-model="store.religion" name="religion" id="religion" required>
             <option value="">Choose Religion</option>
             <option v-for="religion in store.religions" :key="religion.code" :value="religion.code">
@@ -193,10 +203,10 @@ onMounted(async () => {
           <ErrorMessage name="religion" class="absolute bottom-0 block text-red-500 text-sm" />
         </span>
 
-        &nbsp;
-        <span class="relative inline-block mb-6">
+        <span class="hidden md:inline">&nbsp;</span>
+        <span class="relative block md:inline-block mb-0 md:mb-6">
           <Field as="select"
-            class="w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
+            class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
             v-model="store.nationality" name="nationality" id="nationality" required>
             <option value="">Nationality</option>
             <option v-for="(nationality, index) in store.nationalities" :key="index" :value="nationality">
@@ -206,17 +216,17 @@ onMounted(async () => {
           <ErrorMessage name="nationality" class="absolute bottom-0 block text-red-500 text-sm" />
         </span>
 
-        &nbsp; residing at:
-        <span class="relative block mb-6">
+        <span class="hidden md:inline">&nbsp;</span> residing at:
+        <span class="relative block mb-0 md:mb-6">
           <Field as="textarea" type="text" rows="5"
             class="w-full inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
             v-model="store.address" name="address" id="address" required placeholder="Your Address" />
           <ErrorMessage name="address" class="absolute bottom-0 block text-red-500 text-sm" />
         </span>
 
-        <span class="relative inline-block mb-6">
+        <span class="relative block md:inline-block mb-0 md:mb-6">
           <Field as="select"
-            class="w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
+            class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
             v-model="store.state" name="state" id="state" required>
             <option value="">Your State</option>
             <option v-for="state in store.states" :key="state.code" :value="state.code">
@@ -225,7 +235,8 @@ onMounted(async () => {
           </Field>
           <ErrorMessage name="state" class="absolute bottom-0 block text-red-500 text-sm" />
         </span>
-        &nbsp; do hereby depose on oath and solemnly declare as follows:
+        <span class="hidden md:inline">&nbsp;</span> do hereby depose on oath and solemnly
+        declare as follows:
       </p>
     </div>
     <div class="form-field ml-4">
@@ -246,19 +257,24 @@ onMounted(async () => {
       </ol>
     </div>
 
-    <div class="flex flex-col md:flex-row items-center justify-between my-20">
+    <div class="flex flex-col md:flex-row items-start justify-between my-20">
       <div class="form-field">
-        <span class="font-bold">Sworn on the</span>&nbsp;
+        <span class="font-bold">Sworn on the</span><span class="hidden md:inline">&nbsp;</span>
         <input type="date"
-          class="appearance-none w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3"
+          class="appearance-none w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3"
           v-model="store.swear_date" id="date" required placeholder="date" />
       </div>
-      <div class="form-field mt-10 md:mt-0">
-        <img v-if="signaturePreview" :src="signaturePreview" alt="Signature"
-          class="w-[120px] h-auto object-cover mb-2" />
-        <h2 class="cursor-pointer text-center font-bold" @click="showSignatureModal = true">
+      <div class="form-field w-full md:w-auto text-center mt-10 md:mt-0 relative">
+        <div class="flex justify-center">
+          <img v-if="signaturePreview" :src="signaturePreview" alt="Signature"
+            class="w-[130px] h-[70px] object-contain absolute bottom-[70px]" />
+        </div>
+
+        <h2 class="cursor-pointer font-bold mt-10" @click="showSignatureModal = true">
           DEPONENT
         </h2>
+        <small>Click on <span class="font-semibold">"DEPONENT"</span> <br />
+          to affix your signature</small>
       </div>
     </div>
 
@@ -286,7 +302,10 @@ onMounted(async () => {
 
           <template #content="{ selectedIndex }">
             <TabPanelComp :isActive="selectedIndex === 0">
-              <DropZone @file-uploaded="handleUploadedSignature" size="2xl" class="mb-8">
+              <SignPad @drawn-signature="handleDrawnSignature" size="2xl" class="mb-8" />
+            </TabPanelComp>
+            <TabPanelComp :isActive="selectedIndex === 1">
+              <DropZone @file-uploaded="handleUploadedSignature" size="2xl" class="my-4">
                 <p class="text-center">Drag and drop or</p>
                 <button
                   class="bg-primary text-white px-3 py-2 my-2 block mx-auto mt-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -294,16 +313,16 @@ onMounted(async () => {
                 </button>
                 <p>PDF, DOC, DOCX, PNG or JPG</p>
               </DropZone>
-
-              <div class="mt-8">
-                <ButtonComp size="md" variant="primary" @click="showSignatureModal = false"
-                  class="block ml-auto my-4 text-sm md:text-base">
-                  Save and Continue
-                </ButtonComp>
-              </div>
             </TabPanelComp>
           </template>
         </TabGroupComp>
+
+        <div class="mt-4">
+          <ButtonComp size="md" variant="primary" @click="showSignatureModal = false"
+            class="block ml-auto my-4 text-sm md:text-base">
+            Save and Continue
+          </ButtonComp>
+        </div>
       </template>
     </ModalComp>
   </div>

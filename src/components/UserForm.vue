@@ -79,7 +79,14 @@ defineExpose({
 </script>
 
 <template>
-  <Form>
+  <div v-if="formStore.loading" class="overlay">
+    <div class="glass-morphism">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
+
+  <Form v-else>
     <div class="a4-size">
       <h2 class="text-primary font-bold text-lg">Customer Information</h2>
       <p>Fill the following questions to populate your biodata</p>
@@ -91,19 +98,23 @@ defineExpose({
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             1. Email Address
           </label>
-          <Field
-            class="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-lg py-3 px-4 mb-3"
-            type="email" id="email" name="email" v-model="formStore.email" placeholder="Enter Email Address" />
-          <ErrorMessage name="email" />
+          <div class="relative">
+            <Field
+              class="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-lg py-3 px-4 mb-6"
+              type="email" id="email" name="email" v-model="formStore.email" placeholder="Enter Email Address" />
+            <ErrorMessage name="email" class="absolute bottom-[-20px] text-red-500 text-sm" />
+          </div>
         </div>
         <div class="w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
             2. Phone Number
           </label>
-          <Field
-            class="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-lg py-3 px-4 mb-3"
-            type="tel" id="phone" name="phone" v-model="formStore.phone" placeholder="Enter Phone Number" />
-          <ErrorMessage name="phone" />
+          <div class="relative">
+            <Field
+              class="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-lg py-3 px-4 mb-6"
+              type="tel" id="phone" name="phone" v-model="formStore.phone" placeholder="Enter Phone Number" />
+            <ErrorMessage name="phone" class="absolute bottom-[-20px] text-red-500 text-sm" />
+          </div>
         </div>
         <div class="px-3 mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2">
@@ -114,8 +125,8 @@ defineExpose({
             Passport or license)
           </p>
 
-          <div class="my-4">
-            <DropZone @file-uploaded="handleIdentityUpload" size="xl" class="mb-8">
+          <div class="relative my-4">
+            <DropZone @file-uploaded="handleIdentityUpload" size="xl">
               <p class="text-center">Drag and drop or</p>
               <button
                 class="bg-primary text-white px-3 py-2 my-2 block mx-auto mt-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -123,7 +134,7 @@ defineExpose({
               </button>
               <p>PDF, DOC, DOCX, PNG or JPG</p>
             </DropZone>
-            <ErrorMessage name="identity" />
+            <ErrorMessage name="identity" class="absolute bottom-[-20px] text-red-500 text-sm" />
           </div>
         </div>
       </div>

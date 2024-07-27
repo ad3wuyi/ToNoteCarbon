@@ -11,6 +11,7 @@ export const useUserFormStore = defineStore('userFormStore', {
 		phone: '',
 		identity: null,
 		userId: null,
+		loading: false,
 	}),
 	actions: {
 		setCompany(company) {
@@ -29,6 +30,8 @@ export const useUserFormStore = defineStore('userFormStore', {
 			formData.append('email', this.email);
 			formData.append('phone', this.phone);
 
+			this.loading = true;
+
 			try {
 				const response = await axios.post('https://test-api.gettonote.com/api/v1/legal-docs/documents/user', formData, {
 					headers: {
@@ -40,10 +43,11 @@ export const useUserFormStore = defineStore('userFormStore', {
 
 				// Save user ID from response
 				this.userId = response.data.user.id;
-				// this.reset();
 			} catch (error) {
 				toast.error(error.response.data.message);
 				console.error('Error uploading files:', error);
+			} finally {
+				this.loading = false;
 			}
 		},
 	},

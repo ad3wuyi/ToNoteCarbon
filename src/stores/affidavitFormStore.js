@@ -23,6 +23,7 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 		swear_date: '',
 		photo: null,
 		signature: null,
+		loading: false,
 	}),
 	actions: {
 		async fetchGenders() {
@@ -102,6 +103,8 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 			if (this.photo) formData.append('photo', this.photo);
 			if (this.signature) formData.append('signature', this.signature);
 
+			this.loading = true;
+
 			try {
 				const response = await axios.post('https://test-api.gettonote.com/api/v1/legal-docs/documents/data', formData, {
 					headers: {
@@ -119,6 +122,8 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 			} catch (error) {
 				console.error('Error submitting data:', error);
 				toast.error(error.response.data.message);
+			} finally {
+				this.loading = false;
 			}
 		},
 	},

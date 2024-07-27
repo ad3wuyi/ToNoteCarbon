@@ -47,7 +47,13 @@ defineExpose({
 </script>
 
 <template>
-  <div class="a4-size">
+  <div v-if="store.loading" class="overlay">
+    <div class="glass-morphism">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
+  <div v-else class="a4-size">
     <h2 class="text-primary font-bold text-lg mb-8">Compliance Questions</h2>
 
     <div class="border bg-gray-100 p-4 rounded">
@@ -86,7 +92,7 @@ defineExpose({
           </a>
           and
           <a href="https://www.gettonote.com/privacy" class="text-primary font-semibold" target="_blank">
-            Privacy Policy {{ store.agree }}
+            Privacy Policy
           </a>
         </label>
       </div>
