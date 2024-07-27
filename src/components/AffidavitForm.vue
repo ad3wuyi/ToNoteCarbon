@@ -40,8 +40,10 @@ const handleUploadedSignature = (files) => {
   }
 };
 
-const handleDrawnSignature = async (drawnImg) => {
+const handleDrawnSignature = (drawnImg) => {
+  setFieldValue("signature", drawnImg);
   store.setSignature(drawnImg);
+  validate();
   signaturePreview.value = drawnImg;
 };
 
@@ -63,15 +65,16 @@ const photoSchema = yup
   })
   .required("Photograph is required");
 
+const getFileType = (base64String) => {
+  const matches = base64String != '' ? base64String.match(/^data:(.*?);base64,/) : null;
+  return matches ? matches[1] : null;
+};
+
 const signatureSchema = yup
   .mixed()
   .test("fileType", "Unsupported File Format", (value) => {
-    return (
-      value &&
-      (value.type === "image/jpeg" ||
-        value.type === "image/jpg" ||
-        value.type === "image/png")
-    );
+    const fileType = getFileType(value);
+    return value && fileType === "image/png";
   })
   .required("Signature is required");
 
