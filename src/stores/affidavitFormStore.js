@@ -22,6 +22,7 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 		state: '',
 		swear_date: '',
 		photo: null,
+		signature_type: null,
 		signature: null,
 		loading: false,
 	}),
@@ -70,7 +71,8 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 		setPhotograph(file) {
 			this.photo = file;
 		},
-		setSignature(file) {
+		setSignature(type, file) {
+			this.signature_type = type;
 			this.signature = file;
 		},
 		reset() {
@@ -98,10 +100,15 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 			formData.append('address', this.address);
 			formData.append('state', this.state);
 			formData.append('swear_date', this.swear_date);
+			formData.append('signature_type', this.signature_type);
 
 			// Add files to formData if they exist
 			if (this.photo) formData.append('photo', this.photo);
-			if (this.signature) formData.append('signature', this.signature);
+			if (this.signature) {
+				this.signature_type == 'image'
+					? formData.append('signature_image', this.signature)
+					: formData.append('signature_base64', this.signature);
+			}
 
 			this.loading = true;
 

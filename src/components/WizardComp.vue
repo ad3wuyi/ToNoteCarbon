@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from "vue";
 import ArrowLeftSVG from "../assets/arrow-left.svg";
+import { useUserFormStore } from "../stores/userFormStore";
+const formStore = useUserFormStore();
 
 const props = defineProps({
   steps: {
@@ -16,7 +18,7 @@ const componentRef = ref(null);
 const nextStep = async () => {
   if (componentRef.value) {
     const isValid = await componentRef.value.validateAndSubmit();
-    if (isValid) {
+    if (isValid && (formStore.isSubmitted || currentStep.value == 1)) {
       currentStep.value++;
       window.scrollTo(0, 0);
     }
@@ -45,7 +47,11 @@ const isProceedDisabled = computed(() => {
     <hr class="my-8" />
 
     <div class="flex justify-between my-4">
-      <button @click="prevStep" :disabled="currentStep === 0" class="btn-prev flex items-center">
+      <button
+        @click="prevStep"
+        :disabled="currentStep === 0"
+        class="btn-prev flex items-center"
+      >
         <ArrowLeftSVG alt="Previous" /> &nbsp; Previous
       </button>
       <button @click="nextStep" :disabled="isProceedDisabled" class="btn-next">

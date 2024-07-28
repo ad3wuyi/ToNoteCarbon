@@ -11,9 +11,16 @@ export const useUserFormStore = defineStore('userFormStore', {
 		phone: '',
 		identity: null,
 		userId: null,
+		isSubmitted: false,
 		loading: false,
 	}),
 	actions: {
+		setIsSubmitted(params) {
+			this.isSubmitted = params;
+		},
+		setPhone(phone) {
+			this.phone = phone;
+		},
 		setCompany(company) {
 			this.company = company;
 		},
@@ -40,6 +47,7 @@ export const useUserFormStore = defineStore('userFormStore', {
 					},
 				});
 				toast.success(response.data.message);
+				this.isSubmitted = true;
 
 				// Save user ID from response
 				this.userId = response.data.user.id;
@@ -47,6 +55,7 @@ export const useUserFormStore = defineStore('userFormStore', {
 				toast.error(error.response.data.message);
 				console.error('Error uploading files:', error);
 			} finally {
+				// this.isSubmitted = false;
 				this.loading = false;
 			}
 		},

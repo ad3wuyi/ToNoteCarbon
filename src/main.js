@@ -5,6 +5,9 @@ import { createPinia } from 'pinia';
 // import piniaPersist from 'pinia-plugin-persistedstate';
 import { hashPersistedStatePlugin } from './plugins/hashPersistedStatePlugin';
 
+import VueTelInput from 'vue3-tel-input';
+import 'vue3-tel-input/dist/vue3-tel-input.css';
+
 import App from './App.vue';
 import router from './router';
 
@@ -45,6 +48,7 @@ app.use(VueLazyload, {
 	loading: loadingImage,
 	attempt: 1,
 });
+app.use(VueTelInput);
 
 app.mount('#app');
 

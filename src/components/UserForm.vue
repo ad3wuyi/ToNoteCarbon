@@ -42,6 +42,20 @@ const validateAndSubmit = handleSubmit(async () => {
   return true;
 });
 
+const phoneValue = ref("");
+const countryCode = ref("");
+
+const formattedPhoneNumber = computed(() => {
+  if (phoneValue.value) {
+    return `+${countryCode.value}${phoneValue.value.replace(/\s+/g, "")}`;
+  }
+  return "";
+});
+
+const handleCountryChange = (country) => (countryCode.value = country.dialCode);
+
+const handleChange = (event) => formStore.setPhone(formattedPhoneNumber.value);
+
 // Handling file upload
 const handleIdentityUpload = (files) => {
   const file = files[0];
@@ -70,7 +84,6 @@ onMounted(() => {
 
 // Expose reactive validation state
 const isValid = computed(() => meta.value.valid);
-
 
 defineExpose({
   validateAndSubmit,
@@ -101,19 +114,35 @@ defineExpose({
           <div class="relative">
             <Field
               class="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-lg py-3 px-4 mb-6"
-              type="email" id="email" name="email" v-model="formStore.email" placeholder="Enter Email Address" />
-            <ErrorMessage name="email" class="absolute bottom-[-20px] text-red-500 text-sm" />
+              type="email"
+              id="email"
+              name="email"
+              v-model="formStore.email"
+              placeholder="Enter Email Address"
+            />
+            <ErrorMessage
+              name="email"
+              class="absolute bottom-[-20px] text-red-500 text-sm"
+            />
           </div>
         </div>
         <div class="w-full md:w-1/2 lg:w-2/3 px-3 mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
-            2. Phone Number <small class="text-red-500 italic">Your country code is required (e.g. +234)</small>
+            2. Phone Number
           </label>
           <div class="relative">
-            <Field
-              class="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-lg py-3 px-4 mb-6"
-              type="tel" id="phone" name="phone" v-model="formStore.phone" placeholder="Enter Phone Number" />
-            <ErrorMessage name="phone" class="absolute bottom-[-20px] text-red-500 text-sm" />
+            <Field name="phone" v-model="phoneValue" v-slot="{ field, meta }">
+              <vue-tel-input
+                v-bind="field"
+                @input="handleChange"
+                v-on:country-changed="handleCountryChange"
+                class="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-xl py-2 px-2 mb-6"
+              />
+            </Field>
+            <ErrorMessage
+              name="phone"
+              class="absolute bottom-[-20px] text-red-500 text-sm"
+            />
           </div>
         </div>
         <div class="px-3 mb-6">
@@ -129,12 +158,16 @@ defineExpose({
             <DropZone @file-uploaded="handleIdentityUpload" size="xl">
               <p class="text-center">Drag and drop or</p>
               <button
-                class="bg-primary text-white px-3 py-2 my-2 block mx-auto mt-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="bg-primary text-white px-3 py-2 my-2 block mx-auto mt-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
                 Click to upload
               </button>
               <p>PDF, DOC, DOCX, PNG or JPG</p>
             </DropZone>
-            <ErrorMessage name="identity" class="absolute bottom-[-20px] text-red-500 text-sm" />
+            <ErrorMessage
+              name="identity"
+              class="absolute bottom-[-20px] text-red-500 text-sm"
+            />
           </div>
         </div>
       </div>

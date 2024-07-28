@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useAffidavitFormStore } from "@/stores/affidavitFormStore";
+import { useUserFormStore } from "../stores/userFormStore";
 import ModalComp from "./ModalComp.vue";
 import SignPad from "./SignPad.vue";
 import DropZone from "./DropZone.vue";
@@ -13,6 +14,7 @@ import UserSVG from "../assets/user.svg";
 import { useForm, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 
+const formStore = useUserFormStore();
 const store = useAffidavitFormStore();
 
 const tabs = ["Draw", "Upload"];
@@ -34,7 +36,7 @@ const handlePhotographUpload = async (event) => {
 const handleUploadedSignature = (files) => {
   if (files.length > 0) {
     setFieldValue("signature", files[0]);
-    store.setSignature(files[0]);
+    store.setSignature("image", files[0]);
     validate();
     signaturePreview.value = URL.createObjectURL(files[0]);
   }
@@ -42,7 +44,7 @@ const handleUploadedSignature = (files) => {
 
 const handleDrawnSignature = (drawnImg) => {
   setFieldValue("signature", drawnImg);
-  store.setSignature(drawnImg);
+  store.setSignature("base64", drawnImg);
   validate();
   signaturePreview.value = drawnImg;
 };
@@ -66,15 +68,23 @@ const photoSchema = yup
   .required("Photograph is required");
 
 const getFileType = (base64String) => {
-  const matches = base64String != '' ? base64String.match(/^data:(.*?);base64,/) : null;
+  const matches = base64String != "" ? base64String.match(/^data:(.*?);base64,/) : null;
   return matches ? matches[1] : null;
 };
 
 const signatureSchema = yup
   .mixed()
   .test("fileType", "Unsupported File Format", (value) => {
-    const fileType = getFileType(value);
-    return value && fileType === "image/png";
+    let fileType = null;
+    if (value && !value.type) {
+      fileType = getFileType(value);
+    }
+    return (
+      value &&
+      (value.type === "image/jpeg" ||
+        value.type === "image/png" ||
+        fileType === "image/png")
+    );
   })
   .required("Signature is required");
 
@@ -119,6 +129,7 @@ defineExpose({
 });
 
 onMounted(async () => {
+  formStore.setIsSubmitted(false);
   const today = new Date();
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -135,12 +146,21 @@ onMounted(async () => {
 <template>
   <div class="a4-size p-0 lg:p-4">
     <div class="flex flex-col md:flex-row items-center gap-10">
-      <div class="w-[150px] h-[160px] bg-gray-100 rounded-lg border border-dashed border-gray-400 relative">
+      <div
+        class="w-[150px] h-[160px] bg-gray-100 rounded-lg border border-dashed border-gray-400 relative"
+      >
         <UserSVG v-if="!photographPreview" alt="user" />
-        <img v-else :src="photographPreview" alt="Uploaded Photograph" class="w-full h-full object-cover rounded-lg" />
+        <img
+          v-else
+          :src="photographPreview"
+          v-lazy="photographPreview"
+          alt="Uploaded Photograph"
+          class="w-full h-full object-cover rounded-lg"
+        />
         <div class="absolute bottom-0 w-full text-center">
           <label
-            class="bg-white border border-gray-300 px-3 py-1 my-2 text-xs inline-block mx-auto rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500">
+            class="bg-white border border-gray-300 px-3 py-1 my-2 text-xs inline-block mx-auto rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
             Click to upload
             <input type="file" class="hidden" @change="handlePhotographUpload" />
           </label>
@@ -169,74 +189,145 @@ onMounted(async () => {
         <span class="relative block md:inline-block mb-0 md:mb-6">
           <Field
             class="appearance-none w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
-            type="text" name="name" id="name" v-model="store.full_name" placeholder="Your Name" />
-          <ErrorMessage name="name" class="absolute bottom-0 block text-red-500 text-sm" />
+            type="text"
+            name="name"
+            id="name"
+            v-model="store.full_name"
+            placeholder="Your Name"
+          />
+          <ErrorMessage
+            name="name"
+            class="absolute bottom-0 block text-red-500 text-sm"
+          />
         </span>
 
         <span class="hidden md:inline">&nbsp;</span> Adult
         <span class="hidden md:inline">&nbsp;</span>
         <span class="relative block md:inline-block mb-0 md:mb-6">
-          <Field as="select"
+          <Field
+            as="select"
             class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
-            v-model="store.gender" name="gender" id="gender">
+            v-model="store.gender"
+            name="gender"
+            id="gender"
+          >
             <option value="" selected>Choose Gender</option>
-            <option v-for="gender in store.genders" :key="gender.code" :value="gender.code">
+            <option
+              v-for="gender in store.genders"
+              :key="gender.code"
+              :value="gender.code"
+            >
               {{ gender.name }}
             </option>
           </Field>
-          <ErrorMessage name="gender" class="absolute bottom-0 block text-red-500 text-sm" />
+          <ErrorMessage
+            name="gender"
+            class="absolute bottom-0 block text-red-500 text-sm"
+          />
         </span>
         <span class="hidden md:inline">&nbsp;</span>
         <span class="relative block md:inline-block mb-0 md:mb-6">
-          <Field type="text"
+          <Field
+            type="text"
             class="appearance-none w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
-            v-model="store.occupation" name="occupation" id="occupation" required placeholder="Occupation" />
-          <ErrorMessage name="occupation" class="absolute bottom-0 block text-red-500 text-sm" />
+            v-model="store.occupation"
+            name="occupation"
+            id="occupation"
+            required
+            placeholder="Occupation"
+          />
+          <ErrorMessage
+            name="occupation"
+            class="absolute bottom-0 block text-red-500 text-sm"
+          />
         </span>
         <span class="hidden md:inline">&nbsp;</span>
         <span class="relative block md:inline-block mb-0 md:mb-6">
-          <Field as="select"
+          <Field
+            as="select"
             class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
-            v-model="store.religion" name="religion" id="religion" required>
+            v-model="store.religion"
+            name="religion"
+            id="religion"
+            required
+          >
             <option value="">Choose Religion</option>
-            <option v-for="religion in store.religions" :key="religion.code" :value="religion.code">
+            <option
+              v-for="religion in store.religions"
+              :key="religion.code"
+              :value="religion.code"
+            >
               {{ religion.name }}
             </option>
           </Field>
-          <ErrorMessage name="religion" class="absolute bottom-0 block text-red-500 text-sm" />
+          <ErrorMessage
+            name="religion"
+            class="absolute bottom-0 block text-red-500 text-sm"
+          />
         </span>
 
         <span class="hidden md:inline">&nbsp;</span>
         <span class="relative block md:inline-block mb-0 md:mb-6">
-          <Field as="select"
+          <Field
+            as="select"
             class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
-            v-model="store.nationality" name="nationality" id="nationality" required>
+            v-model="store.nationality"
+            name="nationality"
+            id="nationality"
+            required
+          >
             <option value="">Nationality</option>
-            <option v-for="(nationality, index) in store.nationalities" :key="index" :value="nationality">
+            <option
+              v-for="(nationality, index) in store.nationalities"
+              :key="index"
+              :value="nationality"
+            >
               {{ nationality }}
             </option>
           </Field>
-          <ErrorMessage name="nationality" class="absolute bottom-0 block text-red-500 text-sm" />
+          <ErrorMessage
+            name="nationality"
+            class="absolute bottom-0 block text-red-500 text-sm"
+          />
         </span>
 
         <span class="hidden md:inline">&nbsp;</span> residing at:
         <span class="relative block mb-0 md:mb-6">
-          <Field as="textarea" type="text" rows="5"
+          <Field
+            as="textarea"
+            type="text"
+            rows="5"
             class="w-full inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
-            v-model="store.address" name="address" id="address" required placeholder="Your Address" />
-          <ErrorMessage name="address" class="absolute bottom-0 block text-red-500 text-sm" />
+            v-model="store.address"
+            name="address"
+            id="address"
+            required
+            placeholder="Your Address"
+          />
+          <ErrorMessage
+            name="address"
+            class="absolute bottom-0 block text-red-500 text-sm"
+          />
         </span>
 
         <span class="relative block md:inline-block mb-0 md:mb-6">
-          <Field as="select"
+          <Field
+            as="select"
             class="w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3 mb-6"
-            v-model="store.state" name="state" id="state" required>
+            v-model="store.state"
+            name="state"
+            id="state"
+            required
+          >
             <option value="">Your State</option>
             <option v-for="state in store.states" :key="state.code" :value="state.code">
               {{ state.name }}
             </option>
           </Field>
-          <ErrorMessage name="state" class="absolute bottom-0 block text-red-500 text-sm" />
+          <ErrorMessage
+            name="state"
+            class="absolute bottom-0 block text-red-500 text-sm"
+          />
         </span>
         <span class="hidden md:inline">&nbsp;</span> do hereby depose on oath and solemnly
         declare as follows:
@@ -262,42 +353,75 @@ onMounted(async () => {
 
     <div class="flex flex-col md:flex-row items-start justify-between my-20">
       <div class="form-field">
-        <span class="font-bold">Sworn on the</span><span class="hidden md:inline">&nbsp;</span>
-        <input type="date"
+        <span class="font-bold">Sworn on the</span
+        ><span class="hidden md:inline">&nbsp;</span>
+        <input
+          type="date"
           class="appearance-none w-full md:w-auto inline-block bg-white text-gray-700 border border-gray-400 rounded py-2 px-3"
-          v-model="store.swear_date" id="date" required placeholder="date" />
+          v-model="store.swear_date"
+          id="date"
+          required
+          placeholder="date"
+        />
       </div>
       <div class="form-field w-full md:w-auto text-center mt-10 md:mt-0 relative">
         <div class="flex justify-center">
-          <img v-if="signaturePreview" :src="signaturePreview" alt="Signature"
-            class="w-[130px] h-[70px] object-contain absolute bottom-[70px]" />
+          <img
+            v-if="signaturePreview"
+            :src="signaturePreview"
+            v-lazy="signaturePreview"
+            @click="showSignatureModal = true"
+            alt="Signature"
+            class="w-[130px] h-[70px] object-contain cursor-pointer absolute bottom-[25px]"
+          />
+          <div
+            v-else
+            @click="showSignatureModal = true"
+            class="border-2 w-[130px] h-[30px] text-primary font-semibold cursor-pointer absolute bottom-[25px]"
+          >
+            Sign here
+          </div>
         </div>
 
-        <h2 class="cursor-pointer font-bold mt-10" @click="showSignatureModal = true">
+        <h2 class="font-bold mt-10 md:mt-4">
+          <div class="ml-auto border border-dashed border-gray-400 w-[130px] mx-auto" />
           DEPONENT
         </h2>
-        <small>Click on <span class="font-semibold">"DEPONENT"</span> <br />
-          to affix your signature</small>
+        <!-- <small
+          >Click on <span class="font-semibold">"DEPONENT"</span> <br />
+          to affix your signature</small
+        > -->
       </div>
     </div>
 
     <div class="text-center">
       <h2 class="font-bold">BEFORE ME</h2>
 
-      <div class="mx-auto my-12 border border-dashed w-[200px]" />
+      <div class="mx-auto my-12 border border-dashed border-gray-400 w-[200px]" />
     </div>
 
-    <ModalComp :visible="showSignatureModal" :showFooter="false" size="lg" @update:visible="updateVisible"
-      @close="showSignatureModal = false">
+    <ModalComp
+      :visible="showSignatureModal"
+      :showFooter="false"
+      size="lg"
+      @update:visible="updateVisible"
+      @close="showSignatureModal = false"
+    >
       <template #header>
         <h3 class="text-xl font-semibold">Create signature</h3>
       </template>
       <template #body>
-        <TabGroupComp :tabs="tabs" activeTabClass="border-b-[3px] border-primary text-primary"
-          inactiveTabClass="text-gray-600">
+        <TabGroupComp
+          :tabs="tabs"
+          activeTabClass="border-b-[3px] border-primary text-primary"
+          inactiveTabClass="text-gray-600"
+        >
           <template #tab="{ tab, index, isActive }">
             <div class="flex flex-nowrap whitespace-nowrap pb-1">
-              <span class="px-4 py-2 rounded-lg text-xs md:text-base" :class="{ 'bg-[#edf3ff]': isActive === index }">
+              <span
+                class="px-4 py-2 rounded-lg text-xs md:text-base"
+                :class="{ 'bg-[#edf3ff]': isActive === index }"
+              >
                 {{ tab }}
               </span>
             </div>
@@ -311,7 +435,8 @@ onMounted(async () => {
               <DropZone @file-uploaded="handleUploadedSignature" size="2xl" class="my-4">
                 <p class="text-center">Drag and drop or</p>
                 <button
-                  class="bg-primary text-white px-3 py-2 my-2 block mx-auto mt-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  class="bg-primary text-white px-3 py-2 my-2 block mx-auto mt-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
                   Click to upload
                 </button>
                 <p>PDF, DOC, DOCX, PNG or JPG</p>
@@ -321,8 +446,12 @@ onMounted(async () => {
         </TabGroupComp>
 
         <div class="mt-4">
-          <ButtonComp size="md" variant="primary" @click="showSignatureModal = false"
-            class="block ml-auto my-4 text-sm md:text-base">
+          <ButtonComp
+            size="md"
+            variant="primary"
+            @click="showSignatureModal = false"
+            class="block ml-auto my-4 text-sm md:text-base"
+          >
             Save and Continue
           </ButtonComp>
         </div>
