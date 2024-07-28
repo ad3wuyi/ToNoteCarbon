@@ -94,7 +94,7 @@ defineExpose({
       <hr class="my-8" />
 
       <div class="-mx-3">
-        <div class="w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
+        <div class="w-full md:w-1/2 lg:w-2/3 px-3 mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             1. Email Address
           </label>
@@ -105,9 +105,9 @@ defineExpose({
             <ErrorMessage name="email" class="absolute bottom-[-20px] text-red-500 text-sm" />
           </div>
         </div>
-        <div class="w-full md:w-1/2 lg:w-1/3 px-3 mb-6">
+        <div class="w-full md:w-1/2 lg:w-2/3 px-3 mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
-            2. Phone Number
+            2. Phone Number <small class="text-red-500 italic">Your country code is required (e.g. +234)</small>
           </label>
           <div class="relative">
             <Field
