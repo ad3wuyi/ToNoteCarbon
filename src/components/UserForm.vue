@@ -19,12 +19,15 @@ const fileSchema = yup
         value.type === "image/png")
     );
   })
-  .required("Identity document is required");
+  .required("Means of Identification is required.");
 
 // Main form validation schema
 const schema = yup.object({
   email: yup.string().email().required("Email is required"),
-  phone: yup.string().max(11, 'Phone number cannot exceed 11 characters').required("Phone number is required"),
+  phone: yup
+    .string()
+    .max(15, "Phone number cannot exceed 15 characters")
+    .required("Phone number is required"),
   identity: fileSchema,
 });
 
@@ -102,7 +105,7 @@ defineExpose({
   <Form v-else>
     <div class="a4-size">
       <h2 class="text-primary font-bold text-lg">Customer Information</h2>
-      <p>Fill the following questions to populate your biodata</p>
+      <p>Please provide the requested information below:</p>
 
       <hr class="my-8" />
 
@@ -149,10 +152,11 @@ defineExpose({
           <label class="block text-gray-700 text-sm font-bold mb-2">
             3. Upload your means of Identification
           </label>
-          <p>
-            Make sure that the document uploaded is clear and legible (We accept only
-            Passport or license)
-          </p>
+          <small>
+            Upload Your Means of Identification. Ensure the uploaded document is clear and
+            legible. <br />Accepted documents are National ID Card, Int'l Passport, or
+            Driver's License only.
+          </small>
 
           <div class="relative my-4">
             <DropZone @file-uploaded="handleIdentityUpload" size="xl">
@@ -169,6 +173,10 @@ defineExpose({
               class="absolute bottom-[-20px] text-red-500 text-sm"
             />
           </div>
+          <small>
+            If uploading a JPG or PNG, it must be at least 600px in width and 400px in
+            height.
+          </small>
         </div>
       </div>
     </div>

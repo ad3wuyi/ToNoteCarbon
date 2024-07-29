@@ -159,9 +159,9 @@ onMounted(async () => {
         />
         <div class="absolute bottom-0 w-full text-center">
           <label
-            class="bg-white border border-gray-300 px-3 py-1 my-2 text-xs inline-block mx-auto rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="bg-transparent text-primary hover:text-red-500 font-semibold cursor-pointer px-3 py-1 mt-2 text-xs inline-block mx-auto rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >
-            Click to upload
+            <small>Upload your passport photograph</small>
             <input type="file" class="hidden" @change="handlePhotographUpload" />
           </label>
         </div>
@@ -181,7 +181,7 @@ onMounted(async () => {
     </div>
 
     <div class="text-center font-semibold mt-10 mb-8">
-      <h2 class="text-lg underline">Sworn Affidavit of Indemnity</h2>
+      <h2 class="text-lg underline">Affidavit of Indemnity</h2>
     </div>
     <div class="form-field">
       <p class="mb-4">
@@ -319,7 +319,7 @@ onMounted(async () => {
             id="state"
             required
           >
-            <option value="">Your State</option>
+            <option value="">State of Residence</option>
             <option v-for="state in store.states" :key="state.code" :value="state.code">
               {{ state.name }}
             </option>
@@ -336,24 +336,31 @@ onMounted(async () => {
     <div class="form-field ml-4">
       <ol class="list-decimal">
         <li class="mb-4">
-          I affirm that all documents submitted by me to Carbon are authentic and true.
+          That all documents submitted and information provided by me to Carbon
+          Microfinance Bank are authentic and true;
         </li>
         <li class="mb-4">
-          In the event of default on any loan or financial obligation owed to Carbon, I
-          irrevocably authorize Carbon to pursue any necessary legal means to recover
-          funds or address discrepancies arising from the submitted documents.
+          In the event of default on any loan or financial obligation owed to Carbon
+          Microfinance Bank, I irrevocably authorize Carbon Microfinance Bank to pursue
+          any necessary legal means to recover the owed funds;
         </li>
         <li class="mb-4">
-          I agree to indemnify and hold Carbon harmless from any claims, liabilities, or
-          damages resulting from their actions based on the authenticity of the submitted
-          documents.
+          I irrevocably authorize Carbon Microfinance Bank to pursue any necessary legal
+          means to address discrepancies arising from the submitted documents or the
+          information I have provided;
+        </li>
+        <li class="mb-4">
+          I indemnify and hold Carbon Microfinance Bank harmless from any claims,
+          liabilities, or damages resulting from their actions based on the authenticity
+          of the documents submitted me, the information provided by me, or my
+          indebtedness.
         </li>
       </ol>
     </div>
 
     <div class="flex flex-col md:flex-row items-start justify-between my-20">
       <div class="form-field">
-        <span class="font-bold">Sworn on the</span
+        <span class="font-bold">Sworn on:</span
         ><span class="hidden md:inline">&nbsp;</span>
         <input
           type="date"
@@ -377,14 +384,14 @@ onMounted(async () => {
           <div
             v-else
             @click="showSignatureModal = true"
-            class="border-2 w-[130px] h-[30px] text-primary font-semibold cursor-pointer absolute bottom-[25px]"
+            class="shadow-lg border rounded-lg w-[200px] h-[30px] text-primary hover:text-red-500 font-semibold cursor-pointer absolute bottom-[25px]"
           >
-            Sign here
+            Click/Tap here to sign
           </div>
         </div>
 
         <h2 class="font-bold mt-10 md:mt-4">
-          <div class="ml-auto border border-dashed border-gray-400 w-[130px] mx-auto" />
+          <div class="ml-auto border border-dashed border-gray-400 w-[200px] mx-auto" />
           DEPONENT
         </h2>
         <!-- <small
