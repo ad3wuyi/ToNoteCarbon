@@ -59,10 +59,17 @@ defineExpose({
     <div class="border bg-gray-100 p-4 rounded">
       <div class="relative mb-6">
         <div class="flex items-center mb-6">
-          <input v-model="initAgreement" id="init-agree-terms" type="checkbox"
-            class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" />
-          <label for="init-agree-terms" class="ml-2 block font-bold text-lg text-gray-700">
-            By clicking this checkbox, you agree:
+          <input
+            v-model="initAgreement"
+            id="init-agree-terms"
+            type="checkbox"
+            class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+          />
+          <label
+            for="init-agree-terms"
+            class="ml-2 block font-bold text-lg text-gray-700"
+          >
+            By clicking this checkbox, you agree that:
           </label>
         </div>
         <span class="absolute bottom-[-20px] text-red-500">{{ initAgreementError }}</span>
@@ -70,28 +77,39 @@ defineExpose({
 
       <ul class="list-disc ml-6">
         <li>
-          That you understand the content of the document filled from the previous page
+          You understand the content of the document filled out on the previous page.
         </li>
-        <li>That you are filling this document of your own free will</li>
-        <li>You agree to use an electronic signature to sign the document</li>
+        <li>You are completing this document of your own free will.</li>
         <li>
-          You understand and agree that by signing the document, you legally bind yourself
-          to the terms of the document
+          You understand and agree that by signing the document with an electronic
+          signature, you legally bind yourself to its terms.
         </li>
       </ul>
     </div>
 
     <div class="mt-6">
       <div class="flex items-center">
-        <input v-model="agree" id="agree-terms" type="checkbox"
-          class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" />
+        <input
+          v-model="agree"
+          id="agree-terms"
+          type="checkbox"
+          class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+        />
         <label for="agree-terms" class="ml-2 block text-sm text-gray-700">
           I agree to the
-          <a href="https://www.gettonote.com/terms" class="text-primary font-semibold" target="_blank">
+          <a
+            href="https://www.gettonote.com/terms"
+            class="text-primary font-semibold"
+            target="_blank"
+          >
             Terms &amp; Conditions
           </a>
           and
-          <a href="https://www.gettonote.com/privacy" class="text-primary font-semibold" target="_blank">
+          <a
+            href="https://www.gettonote.com/privacy"
+            class="text-primary font-semibold"
+            target="_blank"
+          >
             Privacy Policy
           </a>
         </label>
