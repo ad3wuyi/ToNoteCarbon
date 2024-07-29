@@ -181,7 +181,7 @@ onMounted(async () => {
     </div>
 
     <div class="text-center font-semibold mt-10 mb-8">
-      <h2 class="text-lg underline">Affidavit of Indemnity</h2>
+      <h2 class="text-lg underline">Sworn Statement</h2>
     </div>
     <div class="form-field">
       <p class="mb-4">

@@ -12,7 +12,7 @@ import CardComp from '../components/CardComp.vue'
           <div class="my-12">
             <h1 class="text-xl md:text-3xl font-bold text-center mb-4">Document Submitted</h1>
             <p class="text-sm md:text-lg font-semibold text-center">
-              Your document is being processed and an email will be sent to you once complete
+              Your document is being processed and an email will be sent to you once complete.
             </p>
           </div>
         </div>
