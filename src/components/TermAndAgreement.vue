@@ -96,20 +96,12 @@ defineExpose({
           class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
         />
         <label for="agree-terms" class="ml-2 block text-sm text-gray-700">
-          I agree to the
-          <a
-            href="https://www.gettonote.com/terms"
-            class="text-primary font-semibold"
-            target="_blank"
-          >
+          I agree to the I agree to Carbon's
+          <a href="#!" class="text-primary font-semibold" target="_blank">
             Terms &amp; Conditions
           </a>
-          and
-          <a
-            href="https://www.gettonote.com/privacy"
-            class="text-primary font-semibold"
-            target="_blank"
-          >
+          as well as its
+          <a href="#!" class="text-primary font-semibold" target="_blank">
             Privacy Policy
           </a>
         </label>
