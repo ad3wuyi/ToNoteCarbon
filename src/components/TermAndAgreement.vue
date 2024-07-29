@@ -80,7 +80,7 @@ defineExpose({
           You understand the content of the document filled out on the previous page.
         </li>
         <li>You are completing this document of your own free will.</li>
-        <li>You will use an electronic to sign the document.</li>
+        <li>You agree to use your electronic signature on this document</li>
         <li>
           You understand and agree that by signing the document, you legally bind yourself
           to its terms.
