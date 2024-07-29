@@ -97,11 +97,11 @@ defineExpose({
         />
         <label for="agree-terms" class="ml-2 block text-sm text-gray-700">
           I agree to the I agree to Carbon's
-          <a href="#!" class="text-primary font-semibold" target="_blank">
+          <a href="#!" class="text-primary font-semibold">
             Terms &amp; Conditions
           </a>
           as well as its
-          <a href="#!" class="text-primary font-semibold" target="_blank">
+          <a href="#!" class="text-primary font-semibold">
             Privacy Policy
           </a>
         </label>
