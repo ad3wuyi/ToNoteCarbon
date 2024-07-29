@@ -95,7 +95,7 @@ const schema = yup.object({
   religion: yup.string().required("Religion is a required field"),
   nationality: yup.string().required("Nationality is a required field"),
   address: yup.string().required("Address is a required field"),
-  state: yup.string().required("State of residence is a required field"),
+  state: yup.string().required("State of residence is required"),
   // swear_date: yup.string().required(),
   photo: photoSchema,
   signature: signatureSchema,

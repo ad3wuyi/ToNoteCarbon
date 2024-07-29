@@ -96,14 +96,10 @@ defineExpose({
           class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
         />
         <label for="agree-terms" class="ml-2 block text-sm text-gray-700">
-          I agree to the I agree to Carbon's
-          <a href="#!" class="text-primary font-semibold">
-            Terms &amp; Conditions
-          </a>
+          I agree to Carbon's
+          <a href="#!" class="text-primary font-semibold"> Terms &amp; Conditions </a>
           as well as its
-          <a href="#!" class="text-primary font-semibold">
-            Privacy Policy
-          </a>
+          <a href="#!" class="text-primary font-semibold"> Privacy Policy </a>
         </label>
       </div>
       <span class="text-red-500">{{ agreeError }}</span>
