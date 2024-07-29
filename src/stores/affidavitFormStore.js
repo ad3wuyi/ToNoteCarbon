@@ -121,7 +121,7 @@ export const useAffidavitFormStore = defineStore('affidavitForm', {
 				});
 
 				toast.success(response.data.message);
-				router.push({ name: 'completed' });
+				router.push('/completed');
 
 				// Reset the form stores upon successful submission
 				this.reset();

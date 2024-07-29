@@ -90,12 +90,12 @@ const signatureSchema = yup
 
 const schema = yup.object({
   name: yup.string().required("Full name is required"),
-  gender: yup.string().required(),
-  occupation: yup.string().required(),
-  religion: yup.string().required(),
-  nationality: yup.string().required(),
-  address: yup.string().required(),
-  state: yup.string().required(),
+  gender: yup.string().required("Gender is a required field"),
+  occupation: yup.string().required("Occupation is a required field"),
+  religion: yup.string().required("Religion is a required field"),
+  nationality: yup.string().required("Nationality is a required field"),
+  address: yup.string().required("Address is a required field"),
+  state: yup.string().required("State of residence is a required field"),
   // swear_date: yup.string().required(),
   photo: photoSchema,
   signature: signatureSchema,

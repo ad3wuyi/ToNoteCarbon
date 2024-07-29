@@ -155,7 +155,7 @@ defineExpose({
           <small>
             Upload Your Means of Identification. Ensure the uploaded document is clear and
             legible. <br />Accepted documents are National ID Card, Int'l Passport, or
-            Driver's License only.
+            Driver's License.
           </small>
 
           <div class="relative my-4">
