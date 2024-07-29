@@ -54,7 +54,7 @@ defineExpose({
     </div>
   </div>
   <div v-else class="a4-size">
-    <h2 class="text-primary font-bold text-lg mb-8">Compliance Questions</h2>
+    <h2 class="text-primary font-bold text-lg mb-8">Agreement &nbsp; Confirmation</h2>
 
     <div class="border bg-gray-100 p-4 rounded">
       <div class="relative mb-6">
