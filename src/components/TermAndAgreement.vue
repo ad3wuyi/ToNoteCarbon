@@ -97,7 +97,7 @@ defineExpose({
           class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
         />
         <label for="agree-terms" class="ml-2 block text-sm text-gray-700">
-          I agree to Carbon's
+          I agree to ToNote's
           <a
             href="https://www.gettonote.com/terms"
             class="text-primary font-semibold"
