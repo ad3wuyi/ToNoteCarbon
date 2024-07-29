@@ -166,7 +166,7 @@ defineExpose({
               >
                 Click to upload
               </button>
-              <p>PDF, DOC, DOCX, PNG or JPG</p>
+              <p>PNG, JPG or JPEG</p>
             </DropZone>
             <ErrorMessage
               name="identity"
