@@ -24,7 +24,7 @@ const fileSchema = yup
 // Main form validation schema
 const schema = yup.object({
   email: yup.string().email().required("Email is required"),
-  phone: yup.string().required("Phone number is required"),
+  phone: yup.string().max(11, 'Phone number cannot exceed 11 characters').required("Phone number is required"),
   identity: fileSchema,
 });
 
