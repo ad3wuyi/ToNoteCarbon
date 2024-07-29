@@ -159,7 +159,7 @@ onMounted(async () => {
         />
         <div class="absolute bottom-0 w-full text-center">
           <label
-            class="bg-transparent text-primary hover:text-red-500 font-semibold cursor-pointer px-3 py-1 mt-2 text-xs inline-block mx-auto rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="bg-primary text-white font-semibold cursor-pointer px-3 py-1 mt-2 text-xs block rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 transition ease-in-out duration-150"
           >
             <small>Upload your passport photograph</small>
             <input type="file" class="hidden" @change="handlePhotographUpload" />
